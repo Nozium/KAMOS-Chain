@@ -10,12 +10,11 @@
 
 ## task
 ### chain : substrate
+- [x] Do Substrate Tutorial
+- [ ] 
 - [ ] publicでの取引は、hubを経由してprivate層に還元される.
 - [ ] private層での取引は、リザバーコンピューティングとして実行され、chainの形式は作成するが閉じた取引として実行される. substare の機能を活用する. 
 - [ ] KAMOSはprivate層にのみ存在し、その相互作用によって集合が発生されると、hubにその記録が保存される(包含関係)
-- [ ] 
-- [ ] 
-
 ### Front end
 - [ ] make seed flow 
     - [ ] add seed button ( hold and record )
@@ -32,7 +31,7 @@
     - [ ] only animation
 
 ### Back end
-- [ ] aa
+- [ ] visualize private chain transaction [see](https://qlue.io/)
 
 ### future works
 - [ ] hogehoge

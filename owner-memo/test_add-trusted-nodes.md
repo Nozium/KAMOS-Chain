@@ -143,3 +143,11 @@ SS58 Address:      5DADBf9CYit3nfhinsgAuW1q9AvAzMHCQPGQFbVoxyvojMDz
 ~~~
 
 ## 成功? とりあえずnodeを二つ実行することはできた
+
+## add acount from polkadot UI
+alice-kamos-000001
+~~~
+bottom drive obey lake curtain smoke basket hold race lonely fit walk
+~~~
+stop node and account will be lost?
+→ template ui には含まれていないがlocal ネットには含まれているようである
