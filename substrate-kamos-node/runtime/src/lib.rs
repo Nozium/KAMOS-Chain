@@ -95,7 +95,7 @@ pub mod opaque {
 }
 
 // add kamos mod
-mod kamos;
+// mod kamos;
 
 // To learn more about runtime versioning, see:
 // https://docs.substrate.io/main-docs/build/upgrade#runtime-versioning
@@ -300,7 +300,7 @@ impl pallet_node_authorization::Config for Runtime {
    }
 
 // NOTE : add kamos Trait
-impl kamos::Trait for Runtime {}
+// impl kamos::Trait for Runtime {}
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -321,7 +321,7 @@ construct_runtime!(
 		// Include the custom logic from the pallet-template in the runtime.
 		TemplateModule: pallet_template,
 		NodeAuthorization: pallet_node_authorization::{Pallet, Call, Storage, Event<T>, Config<T>},
-		Kamos: kamos::{Pallet,Call,Storage},
+		// Kamos: kamos::{Pallet,Call,Storage},
 	}
 );
 
