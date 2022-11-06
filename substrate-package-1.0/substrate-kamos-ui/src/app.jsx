@@ -22,6 +22,7 @@ import { Pretty } from './Pretty';
 export class App extends ReactiveComponent {
 	constructor() {
 		super([], { ensureRuntime: runtimeUp })
+		addCodecTransform('TokenBalance', 'u128');
 
 		// For debug only.
 		window.runtime = runtime;
@@ -39,6 +40,12 @@ export class App extends ReactiveComponent {
 			<Heading />
 			<WalletSegment />
 			<Divider hidden />
+			<If condition={typeof runtime.kamostoken != "undefined"} then={
+                <KamosSegment init={runtime.kamostoken ? runtime.kamostoken.init: {}}/>
+            }/>
+            <If condition={typeof runtime.kamostoken != "undefined"} then={
+                <Divider hidden />
+            } />
 			<AddressBookSegment />
 			<Divider hidden />
 			<FundingSegment />
@@ -136,6 +143,112 @@ class WalletSegment extends React.Component {
 			</div>
 		</Segment>
 	}
+}
+
+class KamosSegment extends React.Component{
+    constructor() {
+        super()
+		this.source = new Bond;
+		this.initSupply = new Bond;
+		this.receiver = new Bond;
+		this.transferAmount = new Bond;
+    }
+	render() {
+        return <Segment style={{ margin: '1em' }}>
+		<Header as='h2'>
+			<Icon name='money bill alternate' />
+			<Header.Content>
+				Token
+				<Header.Subheader>Manage kamos token</Header.Subheader>
+			</Header.Content>
+		</Header>
+		<div style={{ paddingBottom: '1em' }}>
+				<Label>Init <Label.Detail>
+                    <Pretty className="value" value={runtime.kamostoken.init} />
+                </Label.Detail></Label>
+				<Label>Owner <Label.Detail>
+                    <Pretty className="value" value={runtime.kamostoken.owner} />
+                </Label.Detail></Label>
+				<Label>Supply <Label.Detail>
+                    <Pretty className="value" value={runtime.kamostoken.supply} />
+                </Label.Detail></Label>
+                {/* <Label>Ticker <Label.Detail>
+                    <StringPretty className="value" value={runtime.kamostoken.ticker} />
+                </Label.Detail></Label>
+                <Label>Token Name <Label.Detail>
+                    <StringPretty className="value" value={runtime.kamostoken.name} />
+                </Label.Detail></Label>
+                <Label>Root <Label.Detail>
+                    <Pretty className="value" value={runtime.kamostoken.root} />
+                </Label.Detail></Label>
+                <Label>Total Supply <Label.Detail>
+                    <Pretty className="value" value={runtime.kamostoken.totalSupply} />
+                </Label.Detail></Label>
+                <div style={{ paddingBottom: '1em' }}>
+                </div>
+                <Label>Local Supply <Label.Detail>
+                    <Pretty className="value" value={runtime.kamostoken.localSupply} />
+                </Label.Detail></Label>
+                <Label>Parent Supply <Label.Detail>
+                    <Pretty className="value" value={runtime.kamostoken.parentSupply} />
+                </Label.Detail></Label>
+                <Label>Child Supply <Label.Detail>
+                    <Pretty className="value" value={runtime.kamostoken.childSupplies(0)} />
+                </Label.Detail></Label> */}
+		</div>
+		<div style={{ paddingBottom: '1em' }}>
+			<div style={{ fontSize: 'small' }}>Account</div>
+			<SignerBond bond={this.source} />
+			<If condition={this.source.ready()} then={<span>
+				<Label>Token Balance
+					<Label.Detail>
+						<Pretty value={runtime.kamostoken.balanceOf(this.source)} />
+					</Label.Detail>
+				</Label>
+				<Label>Unit Balance
+					<Label.Detail>
+						<Pretty value={runtime.balances.balance(this.source)} />
+					</Label.Detail>
+				</Label>
+				<Label>Nonce
+					<Label.Detail>
+						<Pretty value={runtime.system.accountNonce(this.source)} />
+					</Label.Detail>
+				</Label>
+			</span>} />
+		</div>
+		{/*  add init code */}
+		<div style={{ paddingbottom: '1em' }}>
+            <div style={{ fontsize: 'small' }}>Init</div>
+            <InputBond
+				bond={this.initSupply} 
+				placeholder="Init supply" type="number" validator={n => n ? n : null}
+			/>
+			<TransactButton content="Init" 
+				tx={{ sender: this.source ? this.source : null, 
+					call: calls.kamostoken.init(this.initSupply) }}/>
+		</div>
+		{/* add transfer */}
+		<div style={{ paddingbottom: '1em' }}>
+			<div style={{ fontsize: 'small' }}>Transfer</div>
+			<AccountIdBond bond={this.receiver}/>
+			<InputBond
+				bond={this.transferAmount} 
+				placeholder="Transfer amount" type="number" validator={n => n ? n : null}
+			/>
+			<TransactButton content="transfer"
+				tx={{ sender: this.source ? this.source : null, 
+					call: calls.kamostoken.transfer(this.receiver, this.transferAmount)}}/>
+			<div>
+				<If condition={this.receiver.ready()}then={
+					<Label>Token Balance<Label.Detail>
+						<Pretty value={runtime.kamostoken.balanceOf(this.receiver)}></Pretty>
+					</Label.Detail></Label>
+				}/>
+			</div>
+		</div>
+	</Segment>
+    }
 }
 
 class AddressBookSegment extends React.Component {
