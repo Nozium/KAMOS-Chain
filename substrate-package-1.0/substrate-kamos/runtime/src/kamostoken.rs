@@ -15,14 +15,13 @@ use system::ensure_signed;
 use parity_codec::Codec;
 use runtime_primitives::traits::{SimpleArithmetic, CheckedSub, CheckedAdd, As};
 
-
 /// The module's configuration trait.
 pub trait Trait: system::Trait {
 	// TODO: Add other types and constants required configure this module.
 
 	/// The overarching event type.
 	type Event: From<Event<Self>> + Into<<Self as system::Trait>::Event>;
-    type TokenBalance: SimpleArithmetic + Codec + Default + Copy + Parameter + As<T>;
+    type TokenBalance: SimpleArithmetic + Codec + Default + Copy + Parameter + As<u128>;
 }
 
 /// This module's storage items.
@@ -41,6 +40,7 @@ decl_storage! {
 	}
 }
 
+
 decl_module! {
 	/// The module declaration.
 	pub struct Module<T: Trait> for enum Call where origin: T::Origin {
@@ -55,6 +55,7 @@ decl_module! {
 			// check ensure to signed
 			let sender = ensure_signed(origin)?;
 			ensure!(Self::is_init() == false, "Already initialized.");
+			let supply = <T::TokenBalance as As<u128>>::sa(supply);
 
 			// init AI agent as have token. prime as 0
 			// let primevalue = <T::TokenBalance as As<u128>>::sa(0);
@@ -96,7 +97,7 @@ decl_event!(
 		// Just a dummy event.
 		// Event `Something` is declared with a parameter of the type `u32` and `AccountId`
 		// To emit this event, we call the deposit funtion, from our runtime funtions
-		SomethingStored(u32, AccountId),
+		SomethingStored(u128, AccountId),
 	}
 );
 

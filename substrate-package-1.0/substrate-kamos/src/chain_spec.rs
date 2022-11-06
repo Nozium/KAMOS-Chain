@@ -22,6 +22,8 @@ pub enum Alternative {
 	Development,
 	/// Whatever the current runtime is, with simple Alice/Bob auths.
 	LocalTestnet,
+	KamosUser,
+	KamosAgent,
 }
 
 fn authority_key(s: &str) -> AuthorityId {
@@ -78,12 +80,58 @@ impl Alternative {
 				None,
 				None
 			),
+			Alternative::KamosUser => ChainSpec::from_genesis(
+				"KamosUser",
+				"kamosuser",
+				|| testnet_genesis(vec![
+					authority_key("Alice")
+				], vec![
+					account_key("Alice"),
+					account_key("Bob"),
+					account_key("Charlie"),
+					account_key("Dave"),
+					account_key("Eve"),
+					account_key("Ferdie"),
+				],
+					account_key("Alice")
+				),
+				vec![],
+				None,
+				None,
+				None,
+				None
+			),
+			Alternative::KamosAgent => ChainSpec::from_genesis(
+				"KamosAgent",
+				"kamosagent",
+				|| testnet_genesis(vec![
+					authority_key("Alice")
+				], vec![
+					account_key("Alice_KAMOS_01"),
+					account_key("Alice_KAMOS_02"),
+					account_key("Alice_KAMOS_03"),
+					account_key("Alice_KAMOS_04"),
+					account_key("Alice_KAMOS_05"),
+					account_key("Alice_KAMOS_06"),
+					account_key("Alice_Bob_KAMOS_01"),
+					account_key("Bob_Alice_KAMOS_01"),
+				],
+					account_key("Alice")
+				),
+				vec![],
+				None,
+				None,
+				None,
+				None
+			),
 		})
 	}
 
 	pub(crate) fn from(s: &str) -> Option<Self> {
 		match s {
 			"dev" => Some(Alternative::Development),
+			"kamosagent" => Some(Alternative::KamosAgent),
+			"kamosuser"=> Some(Alternative::KamosUser),
 			"" | "local" => Some(Alternative::LocalTestnet),
 			_ => None,
 		}
